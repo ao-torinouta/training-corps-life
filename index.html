@@ -316,10 +316,10 @@
       { start: "06:00", name: "起床" },
       { start: "06:30", name: "朝食・補給" },
       { start: "07:45", name: "出発・移動" },
-      { start: "08:30", name: "勤務" },
+      { start: "08:00", name: "勤務" },
       { start: "12:00", name: "昼食・休憩" },
       { start: "13:00", name: "勤務" },
-      { start: "17:30", name: "帰投・整理" },
+      { start: "17:00", name: "帰投・整理" },
       { start: "18:00", name: "夕食・補給" },
       { start: "21:00", name: "入浴・整備" },
       { start: "22:00", name: "自由・創作" },
@@ -337,6 +337,8 @@
 
     let extensionMinutes = 0;
     let lastCurrentIndex = -1;
+    let quoteLocked = false;
+    let quoteTimer;
 
     function toMinutes(time) {
       const [hour, minute] = time.split(":").map(Number);
@@ -406,7 +408,8 @@
       nextSubjectEl.textContent = info.next.name;
       nextTimeEl.textContent = formatTime(nextStart);
 
-      quoteEl.textContent = `「現在課目：${shortName(info.current.name)}。」`;
+      if (!quoteLocked) {
+  quoteEl.textContent = `「現在課目：${shortName(info.current.name)}。」`;
     }
 
     function shortName(name) {
@@ -422,10 +425,19 @@
     }
 
     document.getElementById("startBtn").addEventListener("click", () => {
-      const subject = currentSubjectEl.textContent;
-      quoteEl.textContent = `「${shortName(subject)}を開始しろ。」`;
-      setStatus(`${subject}を開始しました。`);
-    });
+  const subject = currentSubjectEl.textContent;
+
+  quoteLocked = true;
+  quoteEl.textContent = `「${shortName(subject)}を開始しろ。」`;
+
+  window.clearTimeout(quoteTimer);
+  quoteTimer = window.setTimeout(() => {
+    quoteLocked = false;
+    updateScreen();
+  }, 5000);
+
+  setStatus(`${subject}を開始しました。`);
+});
 
     document.getElementById("completeBtn").addEventListener("click", () => {
       const subject = currentSubjectEl.textContent;
