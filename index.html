@@ -1,15 +1,23 @@
+教育隊生活ver.0.2
+
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-
-<link rel="apple-touch-icon" href="apple-touch-icon.png">
-<meta name="apple-mobile-web-app-title" content="教育隊生活">
+  <!-- ===== ホーム画面・基本設定 ===== -->
+  <link rel="apple-touch-icon" href="apple-touch-icon.png">
+  <meta name="apple-mobile-web-app-title" content="教育隊生活">
 
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta
+    name="viewport"
+    content="width=device-width, initial-scale=1, viewport-fit=cover"
+  >
   <meta name="theme-color" content="#07111f">
-  <title>教育隊生活 v0.1</title>
+
+  <title>教育隊生活 v0.2</title>
+
   <style>
+    /* ===== 色・共通設定 ===== */
     :root {
       --bg: #050a12;
       --panel: #0b1625;
@@ -24,27 +32,45 @@
       --shadow: 0 18px 50px rgba(0, 0, 0, .38);
     }
 
-    * { box-sizing: border-box; }
+    * {
+      box-sizing: border-box;
+    }
 
-    html, body {
+    html,
+    body {
       min-height: 100%;
       margin: 0;
       background:
-        radial-gradient(circle at top, rgba(37, 91, 139, .22), transparent 36%),
-        linear-gradient(180deg, #07111f 0%, var(--bg) 60%);
+        radial-gradient(
+          circle at top,
+          rgba(37, 91, 139, .22),
+          transparent 36%
+        ),
+        linear-gradient(
+          180deg,
+          #07111f 0%,
+          var(--bg) 60%
+        );
       color: var(--text);
-      font-family: -apple-system, BlinkMacSystemFont, "Hiragino Sans", "Yu Gothic", sans-serif;
+      font-family:
+        -apple-system,
+        BlinkMacSystemFont,
+        "Hiragino Sans",
+        "Yu Gothic",
+        sans-serif;
     }
 
     body {
       display: grid;
       place-items: center;
-      padding: max(22px, env(safe-area-inset-top))
-               max(18px, env(safe-area-inset-right))
-               max(28px, env(safe-area-inset-bottom))
-               max(18px, env(safe-area-inset-left));
+      padding:
+        max(22px, env(safe-area-inset-top))
+        max(18px, env(safe-area-inset-right))
+        max(28px, env(safe-area-inset-bottom))
+        max(18px, env(safe-area-inset-left));
     }
 
+    /* ===== アプリ全体 ===== */
     .app {
       width: min(100%, 480px);
     }
@@ -63,6 +89,12 @@
       letter-spacing: .06em;
     }
 
+    .version {
+      color: var(--muted);
+      font-size: .55em;
+    }
+
+    /* ===== 課目表示板 ===== */
     .board {
       overflow: hidden;
       border: 1px solid rgba(114, 183, 242, .25);
@@ -87,6 +119,7 @@
       letter-spacing: .12em;
     }
 
+    /* ===== 現在時刻 ===== */
     .clock {
       font-variant-numeric: tabular-nums;
       font-size: clamp(2.8rem, 14vw, 4.5rem);
@@ -101,8 +134,14 @@
       font-size: .92rem;
     }
 
+    /* ===== 現在課目 ===== */
     .current {
-      background: linear-gradient(135deg, rgba(35, 83, 126, .42), rgba(11, 22, 37, .25));
+      background:
+        linear-gradient(
+          135deg,
+          rgba(35, 83, 126, .42),
+          rgba(11, 22, 37, .25)
+        );
     }
 
     .subject {
@@ -117,6 +156,7 @@
       font-size: .95rem;
     }
 
+    /* ===== 次課目 ===== */
     .next-row {
       display: flex;
       align-items: end;
@@ -136,6 +176,7 @@
       white-space: nowrap;
     }
 
+    /* ===== 教官表示 ===== */
     .officer {
       display: grid;
       grid-template-columns: 112px 1fr;
@@ -160,6 +201,7 @@
       line-height: 1.7;
     }
 
+    /* ===== 操作ボタン ===== */
     .actions {
       display: grid;
       grid-template-columns: repeat(3, 1fr);
@@ -189,6 +231,7 @@
       color: #04101c;
     }
 
+    /* ===== 状態メッセージ ===== */
     .status {
       min-height: 1.5em;
       margin: 14px 3px 0;
@@ -205,6 +248,7 @@
       text-align: center;
     }
 
+    /* ===== 初回入隊画面 ===== */
     .modal {
       position: fixed;
       inset: 0;
@@ -216,7 +260,9 @@
       backdrop-filter: blur(10px);
     }
 
-    .modal[hidden] { display: none; }
+    .modal[hidden] {
+      display: none;
+    }
 
     .modal-card {
       width: min(100%, 430px);
@@ -243,53 +289,104 @@
       margin-top: 12px;
     }
 
+    /* ===== 小さい画面向け調整 ===== */
     @media (max-width: 380px) {
-      .section { padding: 20px; }
-      .actions { grid-template-columns: 1fr; }
-      .officer { grid-template-columns: 100px 1fr; }
-      .face { width: 100px; height: 68px; }
+      .section {
+        padding: 20px;
+      }
+
+      .actions {
+        grid-template-columns: 1fr;
+      }
+
+      .officer {
+        grid-template-columns: 100px 1fr;
+      }
+
+      .face {
+        width: 100px;
+        height: 68px;
+      }
     }
   </style>
 </head>
+
 <body>
+  <!-- ===== アプリ本体 ===== -->
   <main class="app">
     <p class="eyebrow">Training Corps Life</p>
-    <h1>教育隊生活 <small style="font-size:.55em;color:#9db2c8">v0.1</small></h1>
+
+    <h1>
+      教育隊生活
+      <small class="version">v0.2</small>
+    </h1>
 
     <section class="board" aria-label="現在の生活課目">
+      <!-- 現在時刻 -->
       <div class="section">
         <div class="label">現在時刻</div>
         <div class="clock" id="clock">--:--</div>
         <div class="date" id="date">----</div>
       </div>
 
+      <!-- 現在課目 -->
       <div class="section current">
         <div class="label">現在課目</div>
         <div class="subject" id="currentSubject">確認中</div>
-        <div class="subject-sub" id="currentRange">--:-- — --:--</div>
+        <div class="subject-sub" id="currentRange">
+          --:-- — --:--
+        </div>
       </div>
 
+      <!-- 次課目 -->
       <div class="section">
         <div class="label">次課目</div>
+
         <div class="next-row">
           <div class="next-name" id="nextSubject">確認中</div>
           <div class="next-time" id="nextTime">--:--</div>
         </div>
       </div>
 
+      <!-- 教官・操作ボタン -->
       <div class="section">
         <div class="officer">
           <div class="face" aria-hidden="true">📋🪨😐</div>
-          <p class="quote" id="quote">「現在課目を確認する。」</p>
+
+          <p class="quote" id="quote">
+            「現在課目を確認する。」
+          </p>
         </div>
 
         <div class="actions">
-          <button type="button" id="startBtn" class="primary">課目開始</button>
-          <button type="button" id="completeBtn">課目完了</button>
-          <button type="button" id="extendBtn">10分延長</button>
+          <button
+            type="button"
+            id="startBtn"
+            class="primary"
+          >
+            課目開始
+          </button>
+
+          <button
+            type="button"
+            id="completeBtn"
+          >
+            課目完了
+          </button>
+
+          <button
+            type="button"
+            id="extendBtn"
+          >
+            10分延長
+          </button>
         </div>
 
-        <p class="status" id="status" aria-live="polite"></p>
+        <p
+          class="status"
+          id="status"
+          aria-live="polite"
+        ></p>
       </div>
     </section>
 
@@ -299,18 +396,45 @@
     </p>
   </main>
 
-  <div class="modal" id="introModal" hidden>
+  <!-- ===== 初回入隊画面 ===== -->
+  <div
+    class="modal"
+    id="introModal"
+    hidden
+  >
     <div class="modal-card">
-      <div class="modal-face" aria-hidden="true">📋🪨😐</div>
+      <div class="modal-face" aria-hidden="true">
+        📋🪨😐
+      </div>
+
       <p>「……新入隊員か。」</p>
       <p>「規則は守ってもらう。」</p>
-      <p>「もっとも、規則はお前を縛るためではない。生活を整えるためのものだ。」</p>
+      <p>
+        「もっとも、規則はお前を縛るためではない。
+        生活を整えるためのものだ。」
+      </p>
       <p>「今日から教育を開始する。」</p>
-      <button type="button" class="primary" id="enlistBtn">入隊する</button>
+
+      <button
+        type="button"
+        class="primary"
+        id="enlistBtn"
+      >
+        入隊する
+      </button>
     </div>
   </div>
 
   <script>
+    // ===== 設定値 =====
+
+    /**
+     * 生活課目の基本時刻表です。
+     *
+     * 課目を変更したい場合は、
+     * startに開始時刻、
+     * nameに課目名を入力します。
+     */
     const baseSchedule = [
       { start: "00:00", name: "消灯・休養" },
       { start: "06:00", name: "起床" },
@@ -322,159 +446,424 @@
       { start: "17:00", name: "帰投・整理" },
       { start: "18:00", name: "夕食・補給" },
       { start: "21:00", name: "入浴・整備" },
-      { start: "22:00", name: "自由・創作" },
+      { start: "22:00", name: "自由時間" },
       { start: "23:30", name: "消灯・休養" }
     ];
 
-    const clockEl = document.getElementById("clock");
-    const dateEl = document.getElementById("date");
-    const currentSubjectEl = document.getElementById("currentSubject");
-    const currentRangeEl = document.getElementById("currentRange");
-    const nextSubjectEl = document.getElementById("nextSubject");
-    const nextTimeEl = document.getElementById("nextTime");
-    const quoteEl = document.getElementById("quote");
-    const statusEl = document.getElementById("status");
+    /**
+     * ボタンを押した後のセリフ表示時間です。
+     * 5000ミリ秒 = 5秒です。
+     */
+    const MESSAGE_DISPLAY_TIME = 5000;
 
+    // ===== 画面部品の取得 =====
+
+    const clockEl =
+      document.getElementById("clock");
+
+    const dateEl =
+      document.getElementById("date");
+
+    const currentSubjectEl =
+      document.getElementById("currentSubject");
+
+    const currentRangeEl =
+      document.getElementById("currentRange");
+
+    const nextSubjectEl =
+      document.getElementById("nextSubject");
+
+    const nextTimeEl =
+      document.getElementById("nextTime");
+
+    const quoteEl =
+      document.getElementById("quote");
+
+    const statusEl =
+      document.getElementById("status");
+
+    const startBtn =
+      document.getElementById("startBtn");
+
+    const completeBtn =
+      document.getElementById("completeBtn");
+
+    const extendBtn =
+      document.getElementById("extendBtn");
+
+    const introModal =
+      document.getElementById("introModal");
+
+    const enlistBtn =
+      document.getElementById("enlistBtn");
+
+    // ===== 動作中に使用する値 =====
+
+    /**
+     * 次課目を何分延長しているかを記録します。
+     */
     let extensionMinutes = 0;
-    let lastCurrentIndex = -1;
-    let quoteLocked = false;
-    let quoteTimer;
 
+    /**
+     * 一時セリフの表示中はtrueになります。
+     *
+     * trueの間は、1秒ごとの画面更新があっても
+     * セリフを「現在課目」に戻しません。
+     */
+    let quoteLocked = false;
+
+    /**
+     * 一時セリフを終了するタイマーを保存します。
+     */
+    let quoteTimer = null;
+
+    /**
+     * 状態メッセージを消すタイマーを保存します。
+     */
+    let statusTimer = null;
+
+    // ===== 共通処理 =====
+
+    /**
+     * 「06:30」のような時刻を、
+     * 0時からの合計分数へ変換します。
+     */
     function toMinutes(time) {
-      const [hour, minute] = time.split(":").map(Number);
+      const [hour, minute] =
+        time.split(":").map(Number);
+
       return hour * 60 + minute;
     }
 
+    /**
+     * 合計分数を「06:30」の形へ戻します。
+     *
+     * 24時を超えた場合も、
+     * 0時から23時59分の範囲へ戻します。
+     */
     function formatTime(totalMinutes) {
-      const normalized = ((totalMinutes % 1440) + 1440) % 1440;
-      const hour = Math.floor(normalized / 60);
-      const minute = normalized % 60;
-      return `${String(hour).padStart(2, "0")}:${String(minute).padStart(2, "0")}`;
+      const normalized =
+        ((totalMinutes % 1440) + 1440) % 1440;
+
+      const hour =
+        Math.floor(normalized / 60);
+
+      const minute =
+        normalized % 60;
+
+      return (
+        `${String(hour).padStart(2, "0")}:` +
+        `${String(minute).padStart(2, "0")}`
+      );
     }
 
-    function getSchedule() {
-      return baseSchedule.map((item, index) => ({
-        ...item,
-        minutes: toMinutes(item.start) + (index > lastCurrentIndex ? extensionMinutes : 0)
-      }));
-    }
-
-    function getCurrentInfo(now) {
-      const minutesNow = now.getHours() * 60 + now.getMinutes();
-      const schedule = baseSchedule.map(item => ({
-        ...item,
-        minutes: toMinutes(item.start)
-      }));
-
-      let currentIndex = schedule.length - 1;
-      for (let i = 0; i < schedule.length; i++) {
-        if (minutesNow >= schedule[i].minutes) currentIndex = i;
-      }
-
-      const current = schedule[currentIndex];
-      const nextIndex = (currentIndex + 1) % schedule.length;
-      const next = schedule[nextIndex];
-
-      return { currentIndex, current, nextIndex, next };
-    }
-
-    function updateScreen() {
-      const now = new Date();
-      const info = getCurrentInfo(now);
-      lastCurrentIndex = info.currentIndex;
-
-      const currentStart = toMinutes(info.current.start);
-      let nextStart = toMinutes(info.next.start);
-
-      if (info.nextIndex === 0) nextStart = 1440;
-      nextStart += extensionMinutes;
-
-      clockEl.textContent = now.toLocaleTimeString("ja-JP", {
-        hour: "2-digit",
-        minute: "2-digit",
-        hour12: false
-      });
-
-      dateEl.textContent = now.toLocaleDateString("ja-JP", {
-        year: "numeric",
-        month: "long",
-        day: "numeric",
-        weekday: "short"
-      });
-
-      currentSubjectEl.textContent = info.current.name;
-      currentRangeEl.textContent =
-        `${formatTime(currentStart)} — ${formatTime(nextStart)}`;
-      nextSubjectEl.textContent = info.next.name;
-      nextTimeEl.textContent = formatTime(nextStart);
-
-      if (!quoteLocked) {
-  quoteEl.textContent = `「現在課目：${shortName(info.current.name)}。」`;
-    }
-
+    /**
+     * 「夕食・補給」から「夕食」だけを取り出します。
+     */
     function shortName(name) {
       return name.split("・")[0];
     }
 
-    function setStatus(message) {
-      statusEl.textContent = message;
-      window.clearTimeout(setStatus.timer);
-      setStatus.timer = window.setTimeout(() => {
-        statusEl.textContent = "";
-      }, 3500);
-    }
+    // ===== 初期化 =====
 
-    document.getElementById("startBtn").addEventListener("click", () => {
-  const subject = currentSubjectEl.textContent;
+    /**
+     * 初回入隊済みかを確認します。
+     *
+     * 未入隊の場合は、初回入隊画面を表示します。
+     */
+    function initializeIntroModal() {
+      try {
+        const isEnlisted =
+          localStorage.getItem("trainingCorpsEnlisted");
 
-  quoteLocked = true;
-  quoteEl.textContent = `「${shortName(subject)}を開始しろ。」`;
-
-  window.clearTimeout(quoteTimer);
-  quoteTimer = window.setTimeout(() => {
-    quoteLocked = false;
-    updateScreen();
-  }, 5000);
-
-  setStatus(`${subject}を開始しました。`);
-});
-
-    document.getElementById("completeBtn").addEventListener("click", () => {
-      const subject = currentSubjectEl.textContent;
-      quoteEl.textContent = "「確認した。次の課目に備えろ。」";
-      setStatus(`${subject}を完了しました。`);
-    });
-
-    document.getElementById("extendBtn").addEventListener("click", () => {
-      extensionMinutes += 10;
-      quoteEl.textContent = "「10分延長を認める。終了時刻は意識しろ。」";
-      setStatus("次課目を10分延長しました。");
-      updateScreen();
-    });
-
-    const introModal = document.getElementById("introModal");
-    const enlistBtn = document.getElementById("enlistBtn");
-
-    try {
-      if (!localStorage.getItem("trainingCorpsEnlisted")) {
+        if (!isEnlisted) {
+          introModal.hidden = false;
+        }
+      } catch (error) {
+        /**
+         * localStorageが使用できない環境では、
+         * 初回入隊画面を表示します。
+         */
         introModal.hidden = false;
       }
-    } catch (error) {
-      introModal.hidden = false;
     }
+
+    // ===== 時刻更新 =====
+
+    /**
+     * 現在時刻・日付・現在課目・次課目を
+     * 画面へ表示します。
+     */
+    function updateScreen() {
+      const now = new Date();
+      const info = getCurrentInfo(now);
+
+      const currentStart =
+        toMinutes(info.current.start);
+
+      let nextStart =
+        toMinutes(info.next.start);
+
+      /**
+       * 次課目が翌日の0時の場合は、
+       * 24時として計算します。
+       */
+      if (info.nextIndex === 0) {
+        nextStart = 1440;
+      }
+
+      /**
+       * 10分延長分を次課目の開始時刻へ加えます。
+       */
+      nextStart += extensionMinutes;
+
+      clockEl.textContent =
+        now.toLocaleTimeString("ja-JP", {
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false
+        });
+
+      dateEl.textContent =
+        now.toLocaleDateString("ja-JP", {
+          year: "numeric",
+          month: "long",
+          day: "numeric",
+          weekday: "short"
+        });
+
+      currentSubjectEl.textContent =
+        info.current.name;
+
+      currentRangeEl.textContent =
+        `${formatTime(currentStart)} — ${formatTime(nextStart)}`;
+
+      nextSubjectEl.textContent =
+        info.next.name;
+
+      nextTimeEl.textContent =
+        formatTime(nextStart);
+
+      /**
+       * 一時セリフを表示していない時だけ、
+       * 通常の現在課目セリフを表示します。
+       */
+      if (!quoteLocked) {
+        showCurrentSubjectQuote(info.current.name);
+      }
+    }
+
+    // ===== 課目判定 =====
+
+    /**
+     * 現在時刻から、
+     * 現在課目と次課目を判定します。
+     */
+    function getCurrentInfo(now) {
+      const minutesNow =
+        now.getHours() * 60 + now.getMinutes();
+
+      const schedule =
+        baseSchedule.map((item) => ({
+          ...item,
+          minutes: toMinutes(item.start)
+        }));
+
+      /**
+       * 0時より前の課目は存在しないため、
+       * 最初は最後の課目を現在課目として仮設定します。
+       */
+      let currentIndex =
+        schedule.length - 1;
+
+      for (
+        let index = 0;
+        index < schedule.length;
+        index += 1
+      ) {
+        if (minutesNow >= schedule[index].minutes) {
+          currentIndex = index;
+        }
+      }
+
+      const current =
+        schedule[currentIndex];
+
+      const nextIndex =
+        (currentIndex + 1) % schedule.length;
+
+      const next =
+        schedule[nextIndex];
+
+      return {
+        currentIndex,
+        current,
+        nextIndex,
+        next
+      };
+    }
+
+    // ===== 課目開始 =====
+
+    /**
+     * 課目開始ボタンを押した時の処理です。
+     */
+    function startCurrentSubject() {
+      const subject =
+        currentSubjectEl.textContent;
+
+      showTemporaryQuote(
+        `「${shortName(subject)}を開始しろ。」`
+      );
+
+      setStatus(
+        `${subject}を開始しました。`
+      );
+    }
+
+    // ===== 課目完了 =====
+
+    /**
+     * 課目完了ボタンを押した時の処理です。
+     */
+    function completeCurrentSubject() {
+      const subject =
+        currentSubjectEl.textContent;
+
+      showTemporaryQuote(
+        "「確認した。次の課目に備えろ。」"
+      );
+
+      setStatus(
+        `${subject}を完了しました。`
+      );
+    }
+
+    // ===== セリフ表示 =====
+
+    /**
+     * 通常時の「現在課目」セリフを表示します。
+     */
+    function showCurrentSubjectQuote(subject) {
+      quoteEl.textContent =
+        `「現在課目：${shortName(subject)}。」`;
+    }
+
+    /**
+     * ボタン操作後のセリフを5秒間表示します。
+     *
+     * 表示中はquoteLockedをtrueにすることで、
+     * 1秒ごとの画面更新による上書きを防ぎます。
+     *
+     * 5秒後は自動的に通常の現在課目セリフへ戻ります。
+     */
+    function showTemporaryQuote(message) {
+      quoteLocked = true;
+      quoteEl.textContent = message;
+
+      /**
+       * 以前のタイマーが残っている場合は解除します。
+       *
+       * これにより連続でボタンを押した場合も、
+       * 最後に押した時点から5秒間表示されます。
+       */
+      window.clearTimeout(quoteTimer);
+
+      quoteTimer = window.setTimeout(() => {
+        quoteLocked = false;
+        updateScreen();
+      }, MESSAGE_DISPLAY_TIME);
+    }
+
+    /**
+     * ボタンの下に状態メッセージを表示します。
+     */
+    function setStatus(message) {
+      statusEl.textContent = message;
+
+      window.clearTimeout(statusTimer);
+
+      statusTimer = window.setTimeout(() => {
+        statusEl.textContent = "";
+      }, MESSAGE_DISPLAY_TIME);
+    }
+
+    // ===== 延長処理 =====
+
+    /**
+     * 10分延長ボタンを押した時の処理です。
+     */
+    function extendCurrentSubject() {
+      extensionMinutes += 10;
+
+      /**
+       * 先に画面を更新し、
+       * 延長後の次課目時刻を表示します。
+       */
+      updateScreen();
+
+      /**
+       * updateScreenの後に一時セリフを表示することで、
+       * 延長セリフがすぐ上書きされるのを防ぎます。
+       */
+      showTemporaryQuote(
+        "「10分延長を認める。終了時刻は意識しろ。」"
+      );
+
+      setStatus(
+        "次課目を10分延長しました。"
+      );
+    }
+
+    // ===== ボタン処理 =====
+
+    startBtn.addEventListener(
+      "click",
+      startCurrentSubject
+    );
+
+    completeBtn.addEventListener(
+      "click",
+      completeCurrentSubject
+    );
+
+    extendBtn.addEventListener(
+      "click",
+      extendCurrentSubject
+    );
 
     enlistBtn.addEventListener("click", () => {
       try {
-        localStorage.setItem("trainingCorpsEnlisted", "yes");
+        localStorage.setItem(
+          "trainingCorpsEnlisted",
+          "yes"
+        );
       } catch (error) {
-        // 保存できない環境でも、その場では閉じる
+        /**
+         * 保存できない環境でも、
+         * その場では入隊画面を閉じます。
+         */
       }
+
       introModal.hidden = true;
-      setStatus("入隊を確認しました。");
+
+      setStatus(
+        "入隊を確認しました。"
+      );
     });
 
+    // ===== アプリ起動 =====
+
+    initializeIntroModal();
     updateScreen();
-    window.setInterval(updateScreen, 1000);
+
+    /**
+     * 1秒ごとに現在時刻と課目表示を更新します。
+     */
+    window.setInterval(
+      updateScreen,
+      1000
+    );
   </script>
 </body>
 </html>
